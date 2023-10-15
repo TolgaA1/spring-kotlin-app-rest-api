@@ -13,7 +13,7 @@ data class Person(
     val name: String,
 
     @Column(name = "surname", nullable = false)
-    val surname: String?,
+    val surname: String,
 
     @Column(name = "email", nullable = false)
     val email: String,

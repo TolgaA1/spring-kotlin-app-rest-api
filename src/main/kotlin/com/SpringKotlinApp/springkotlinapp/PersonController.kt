@@ -1,6 +1,8 @@
 package com.SpringKotlinApp.springkotlinapp
 
 import jakarta.transaction.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.web.bind.annotation.*
 
 //creating the endpoints for the API
@@ -9,7 +11,7 @@ class PersonController(private val personService: PersonService) {
 
     //CRUD endpoints
     @GetMapping("/people")
-    fun getAllPeople(): List<Person> = personService.getAllPeople()
+    fun getAllPeople(pageable: Pageable): Page<Person> = personService.getAllPeople(pageable)
 
     @GetMapping("/people/{username}")
     fun getPeopleByUsername(@PathVariable("username") username: String): Person =
@@ -29,5 +31,11 @@ class PersonController(private val personService: PersonService) {
 
     //Extra endpoint that returns a list of users that can be filtered by name (also partial)
     // and/or age (admin and guest can access). Username and password should not be returned on this endpoint.
+    @GetMapping("/users")
+    fun getUsersNameAgeFilter(@RequestParam(required = false, name = "name") firstName: String?, @RequestParam(required = false, name = "age") age: Int?): List<Person>{
+        println(firstName)
+        println(age)
+        return personService.getAllPeopleByFirstnameAndAge(firstName,age)
+    }
 
 }
