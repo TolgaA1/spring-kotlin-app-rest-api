@@ -32,7 +32,7 @@ class PersonController(private val personService: PersonService) {
     //Extra endpoint that returns a list of users that can be filtered by name (also partial)
     // and/or age (admin and guest can access). Username and password should not be returned on this endpoint.
     @GetMapping("/users")
-    fun getUsersNameAgeFilter(@RequestParam(required = false, name = "name") firstName: String?, @RequestParam(required = false, name = "age") age: Int?): List<Person>{
+    fun getUsersNameAgeFilter(@RequestParam(required = false, name = "name") firstName: String?, @RequestParam(required = false, name = "age") age: Int?): List<PersonDTO>{
         println(firstName)
         println(age)
         return personService.getAllPeopleByFirstnameAndAge(firstName,age)
