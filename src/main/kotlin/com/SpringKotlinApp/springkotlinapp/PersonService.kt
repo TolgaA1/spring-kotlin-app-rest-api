@@ -1,10 +1,13 @@
 package com.SpringKotlinApp.springkotlinapp
 
+import com.SpringKotlinApp.springkotlinapp.Exceptions.UsernameNotFoundException
+import com.SpringKotlinApp.springkotlinapp.Exceptions.WrongDataTypeException
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import java.util.IllegalFormatCodePointException
-import java.util.IllegalFormatException
+import java.lang.Exception
+
 
 
 @Service
@@ -24,51 +27,60 @@ class PersonService(private val personRepository: PersonRepository) {
     }
     fun getAllPeople(pageable: Pageable): Page<Person> = personRepository.findAll(pageable)
 
-    fun getAllPeopleByFirstnameAndAge(personName:String?, age: Int?):List<PersonDTO>{
-        val persons: List<Person> = personRepository.findAllByNameContainingAndAge(personName?.lowercase(),age)
-        if(personName != null && age != null)
-        {
-            val persons: List<Person> = personRepository.findAllByNameContainingAndAge(personName.lowercase(),age)
-            return mapPersonToPersonDTO(persons)
-        }
-        else if(personName == null && age != null)
-        {
-            val persons: List<Person> = personRepository.findAllByAge(age)
-            return mapPersonToPersonDTO(persons)
-        }
-        else if(personName != null)
-        {
-            val persons: List<Person> = personRepository.findAllByNameContaining(personName.lowercase())
-            return mapPersonToPersonDTO(persons)
-        }
-        //TEMP DO EXCEPTION
-        return mapPersonToPersonDTO(persons)
+    fun getAllPeopleByFirstnameAndAge(personName:String?, age: String?):List<PersonDTO>{
+        try {
+            var ageInt: Int? = age?.toIntOrNull()
 
+            if(age != null)
+            {
+                if(ageInt == null)
+                {
+                    throw WrongDataTypeException("ERROR: Invalid data type provided")
+                }
+            }
+
+            if(personName != null && age != null)
+            {
+                val persons: List<Person> = personRepository.findAllByNameContainingAndAge(personName.lowercase(),ageInt)
+                return mapPersonToPersonDTO(persons)
+            }
+            else if(personName == null && age != null)
+            {
+                val persons: List<Person> = personRepository.findAllByAge(ageInt)
+                return mapPersonToPersonDTO(persons)
+            }
+            else if(personName != null)
+            {
+                val persons: List<Person> = personRepository.findAllByNameContaining(personName.lowercase())
+                return mapPersonToPersonDTO(persons)
+            }
+
+            val persons: List<Person> = personRepository.findAll()
+            return mapPersonToPersonDTO(persons)
+
+        } catch(e: Exception)
+        {
+            when(e)
+            {
+                is WrongDataTypeException -> throw WrongDataTypeException("ERROR: Invalid data type provided")
+                else -> throw e
+            }
+        }
     }
 
     fun getPeopleByUsername(username: String): Person = personRepository.findByUsername(username)
 
     fun createPerson(person:Person): Person {
         //making sure strings are in all lowercase except the unique username
-        return personRepository.save(
-            Person(
-                name = person.name.lowercase(),
-                surname = person.surname.lowercase(),
-                email = person.email,
-                phone = person.phone,
-                dateOfBirth = person.dateOfBirth,
-                age = person.age,
-                username = person.username,
-                password = person.password
-            )
-        )
-    }
-
-
-    fun updatePersonByUsername(personUsername: String, person: Person): Person? {
-         if (personRepository.existsByUsername(personUsername)) {
+        try {
+            val ageString:String = person.age.toString()
+            if(ageString.toIntOrNull() == null)
+            {
+                throw WrongDataTypeException("ERROR: Invalid data type provided")
+            }
             return personRepository.save(
                 Person(
+                    id = person.id,
                     name = person.name.lowercase(),
                     surname = person.surname.lowercase(),
                     email = person.email,
@@ -79,19 +91,38 @@ class PersonService(private val personRepository: PersonRepository) {
                     password = person.password
                 )
             )
+        } catch(e: Exception)
+        {
+            when(e)
+            {
+                is DataIntegrityViolationException -> throw DataIntegrityViolationException("ERROR: User you are trying to add already exists")
+                else -> throw e
+            }
         }
-         else
-         {
-             println("not found")
-             return null
-         }
+    }
+
+    fun updatePersonByUsername(personUsername: String, person: Person): Person? {
+        return if (personRepository.existsByUsername(personUsername)) {
+            personRepository.save(
+                Person(
+                    id = getPeopleByUsername(personUsername).id,
+                    name = person.name.lowercase(),
+                    surname = person.surname.lowercase(),
+                    email = person.email,
+                    phone = person.phone,
+                    dateOfBirth = person.dateOfBirth,
+                    age = person.age,
+                    username = person.username,
+                    password = person.password
+                )
+            )
+        } else throw UsernameNotFoundException("ERROR: No matching user was found.")
 
     }
 
     fun deletePersonsByUsername(username: String): Unit {
         if (personRepository.existsByUsername(username)) {
             personRepository.deleteByUsername(username)
-        }
+        } else throw UsernameNotFoundException("ERROR: No matching user was found.")
     }
-
 }

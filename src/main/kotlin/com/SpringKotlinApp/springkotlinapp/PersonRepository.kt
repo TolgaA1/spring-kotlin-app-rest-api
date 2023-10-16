@@ -14,6 +14,6 @@ interface PersonRepository: JpaRepository<Person, Long>{
 
     fun findAllByNameContainingAndAge(name: String?, age: Int?): List<Person>
     fun findAllByNameContaining(name: String): List<Person>
-    fun findAllByAge(age: Int): List<Person>
+    fun findAllByAge(age: Int?): List<Person>
 
 }

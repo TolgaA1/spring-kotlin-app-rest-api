@@ -1,14 +1,15 @@
 package com.SpringKotlinApp.springkotlinapp
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "person")
 //defining the person entity and it's properties
 data class Person(
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long?,
+
     @Column(name = "name", nullable = false)
     val name: String,
 
@@ -27,7 +28,7 @@ data class Person(
     @Column(name = "age", nullable = false)
     val age: Int,
 
-    @Id @Column(name = "user_name", unique = true, nullable = false)
+    @Column(name = "user_name", unique = true, nullable = false)
     val username: String,
 
     @Column(name = "password", nullable = false)
