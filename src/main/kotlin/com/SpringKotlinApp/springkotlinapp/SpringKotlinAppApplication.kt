@@ -18,3 +18,5 @@ class SpringKotlinAppApplication{
 fun main(args: Array<String>) {
 	runApplication<SpringKotlinAppApplication>(*args)
 }
+
+

@@ -12,3 +12,14 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+  h2:
+    console.enabled = true
+  console:
+    path: /h2-console
+    settings.trace: false
+    settings.web-allow-others: false
+  security:
+    user:
+      name: sa
+      password: sa
+
