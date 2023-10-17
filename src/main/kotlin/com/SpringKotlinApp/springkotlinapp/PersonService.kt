@@ -1,8 +1,8 @@
 package com.SpringKotlinApp.springkotlinapp
 
+import com.SpringKotlinApp.springkotlinapp.Exceptions.UsernameAlreadyExistsException
 import com.SpringKotlinApp.springkotlinapp.Exceptions.UsernameNotFoundException
 import com.SpringKotlinApp.springkotlinapp.Exceptions.WrongDataTypeException
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -35,7 +35,7 @@ class PersonService(private val personRepository: PersonRepository) {
             {
                 if(ageInt == null)
                 {
-                    throw WrongDataTypeException("ERROR: Invalid data type provided")
+                    throw WrongDataTypeException("ERROR: Invalid data type provided for age.")
                 }
             }
 
@@ -72,13 +72,9 @@ class PersonService(private val personRepository: PersonRepository) {
 
     fun createPerson(person:Person): Person {
         //making sure strings are in all lowercase except the unique username
-        try {
-            val ageString:String = person.age.toString()
-            if(ageString.toIntOrNull() == null)
-            {
-                throw WrongDataTypeException("ERROR: Invalid data type provided")
-            }
-            return personRepository.save(
+        return if(!personRepository.existsByUsername(person.username))
+        {
+            personRepository.save(
                 Person(
                     id = person.id,
                     name = person.name.lowercase(),
@@ -91,16 +87,39 @@ class PersonService(private val personRepository: PersonRepository) {
                     password = person.password
                 )
             )
-        } catch(e: Exception)
-        {
-            when(e)
-            {
-                is DataIntegrityViolationException -> throw DataIntegrityViolationException("ERROR: User you are trying to add already exists")
-                else -> throw e
-            }
-        }
+        } else throw UsernameAlreadyExistsException("ERROR: This person already exists, please enter a new username.")
     }
 
+    fun updatePersonByID(personID: String, person: Person): Person? {
+        var idLong: Long? = personID.toLongOrNull()
+
+        if(idLong == null)
+        {
+            throw WrongDataTypeException("ERROR: Invalid data type provided for ID")
+        }
+
+        if(person.username != personRepository.getById(idLong).username && personRepository.existsByUsername(person.username))
+        {
+            throw UsernameAlreadyExistsException("ERROR: Another user with this username exists. Please choose a different username.")
+        }
+
+        return if (personRepository.existsById(idLong)) {
+            personRepository.save(
+                Person(
+                    id = idLong,
+                    name = person.name.lowercase(),
+                    surname = person.surname.lowercase(),
+                    email = person.email,
+                    phone = person.phone,
+                    dateOfBirth = person.dateOfBirth,
+                    age = person.age,
+                    username = person.username,
+                    password = person.password
+                )
+            )
+        } else throw UsernameNotFoundException("ERROR: No matching user was found.")
+
+    }
     fun updatePersonByUsername(personUsername: String, person: Person): Person? {
         return if (personRepository.existsByUsername(personUsername)) {
             personRepository.save(

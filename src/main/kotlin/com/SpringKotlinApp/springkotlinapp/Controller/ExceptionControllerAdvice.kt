@@ -1,6 +1,6 @@
 package com.SpringKotlinApp.springkotlinapp.Controller
 
-import com.SpringKotlinApp.springkotlinapp.Exceptions.PersonAlreadyExistsException
+import com.SpringKotlinApp.springkotlinapp.Exceptions.UsernameAlreadyExistsException
 import com.SpringKotlinApp.springkotlinapp.Exceptions.UsernameNotFoundException
 import com.SpringKotlinApp.springkotlinapp.Exceptions.WrongDataTypeException
 import com.SpringKotlinApp.springkotlinapp.Model.ErrorMessageModel
@@ -10,22 +10,12 @@ import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import java.lang.Exception
-import java.lang.IllegalStateException
+
 
 @ControllerAdvice
 class ExceptionControllerAdvice {
     @ExceptionHandler
     fun handleIllegalStateException(ex: IllegalStateException): ResponseEntity<ErrorMessageModel> {
-
-        val errorMessage = ErrorMessageModel(
-            HttpStatus.BAD_REQUEST.value(),
-            ex.message
-        )
-        return ResponseEntity(errorMessage, HttpStatus.BAD_REQUEST)
-    }
-    @ExceptionHandler
-    fun handleHttpMessageNotReadableException(ex: HttpMessageNotReadableException): ResponseEntity<ErrorMessageModel> {
 
         val errorMessage = ErrorMessageModel(
             HttpStatus.BAD_REQUEST.value(),
@@ -50,7 +40,14 @@ class ExceptionControllerAdvice {
         return ResponseEntity(errorMessage, HttpStatus.NOT_FOUND)
     }
 
-
+    @ExceptionHandler
+    fun handleHttpMessageNotReadableException(ex: HttpMessageNotReadableException): ResponseEntity<ErrorMessageModel> {
+        val errorMessage = ErrorMessageModel(
+            HttpStatus.NOT_FOUND.value(),
+            "ERROR: Invalid data type used for one of the fields."
+        )
+        return ResponseEntity(errorMessage, HttpStatus.NOT_FOUND)
+    }
     @ExceptionHandler
     fun handleException(ex: Exception): ResponseEntity<ErrorMessageModel> {
         val errorMessage = ErrorMessageModel(
@@ -69,7 +66,7 @@ class ExceptionControllerAdvice {
         return ResponseEntity(errorMessage, HttpStatus.NOT_FOUND)
     }
     @ExceptionHandler
-    fun handlePersonAlreadyExistsException(ex: PersonAlreadyExistsException): ResponseEntity<ErrorMessageModel> {
+    fun handlePersonAlreadyExistsException(ex: UsernameAlreadyExistsException): ResponseEntity<ErrorMessageModel> {
 
         val errorMessage = ErrorMessageModel(
             HttpStatus.NOT_FOUND.value(),

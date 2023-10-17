@@ -20,9 +20,9 @@ class PersonController(private val personService: PersonService) {
     @PostMapping("/people")
     fun createPerson(@RequestBody payload: Person): Person = personService.createPerson(payload)
 
-    @PutMapping("/people/{username}")
-    fun updatePersonByUsername(@PathVariable("username") username: String, @RequestBody payload: Person): Person? =
-        personService.updatePersonByUsername(username, payload)
+    @PutMapping("/people/{id}")
+    fun updatePersonByID(@PathVariable("id") id: String, @RequestBody payload: Person): Person? =
+        personService.updatePersonByID(id, payload)
 
     @Transactional
     @DeleteMapping("/people/{username}")
