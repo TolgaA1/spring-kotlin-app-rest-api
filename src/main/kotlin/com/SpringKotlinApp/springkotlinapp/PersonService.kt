@@ -27,45 +27,37 @@ class PersonService(private val personRepository: PersonRepository) {
     }
     fun getAllPeople(pageable: Pageable): Page<Person> = personRepository.findAll(pageable)
 
-    fun getAllPeopleByFirstnameAndAge(personName:String?, age: String?):List<PersonDTO>{
-        try {
-            var ageInt: Int? = age?.toIntOrNull()
+    fun getAllPeopleByFirstnameAndAge(personName:String?, age: String?):List<PersonDTO>
+    {
+        var ageInt: Int? = age?.toIntOrNull()
 
-            if(age != null)
-            {
-                if(ageInt == null)
-                {
-                    throw WrongDataTypeException("ERROR: Invalid data type provided for age.")
-                }
-            }
-
-            if(personName != null && age != null)
-            {
-                val persons: List<Person> = personRepository.findAllByNameContainingAndAge(personName.lowercase(),ageInt)
-                return mapPersonToPersonDTO(persons)
-            }
-            else if(personName == null && age != null)
-            {
-                val persons: List<Person> = personRepository.findAllByAge(ageInt)
-                return mapPersonToPersonDTO(persons)
-            }
-            else if(personName != null)
-            {
-                val persons: List<Person> = personRepository.findAllByNameContaining(personName.lowercase())
-                return mapPersonToPersonDTO(persons)
-            }
-
-            val persons: List<Person> = personRepository.findAll()
-            return mapPersonToPersonDTO(persons)
-
-        } catch(e: Exception)
+        if(age != null)
         {
-            when(e)
+            if(ageInt == null)
             {
-                is WrongDataTypeException -> throw WrongDataTypeException("ERROR: Invalid data type provided")
-                else -> throw e
+                throw WrongDataTypeException("ERROR: Invalid data type provided for age.")
             }
         }
+
+        if(personName != null && age != null)
+        {
+            val persons: List<Person> = personRepository.findAllByNameContainingAndAge(personName.lowercase(),ageInt)
+            return mapPersonToPersonDTO(persons)
+        }
+        else if(personName == null && age != null)
+        {
+            val persons: List<Person> = personRepository.findAllByAge(ageInt)
+            return mapPersonToPersonDTO(persons)
+        }
+        else if(personName != null)
+        {
+            val persons: List<Person> = personRepository.findAllByNameContaining(personName.lowercase())
+            return mapPersonToPersonDTO(persons)
+        }
+
+        val persons: List<Person> = personRepository.findAll()
+        return mapPersonToPersonDTO(persons)
+
     }
 
     fun getPeopleByUsername(username: String): Person = personRepository.findByUsername(username)
