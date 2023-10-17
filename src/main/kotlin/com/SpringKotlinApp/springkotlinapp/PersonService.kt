@@ -6,8 +6,6 @@ import com.SpringKotlinApp.springkotlinapp.Exceptions.WrongDataTypeException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import java.lang.Exception
-
 
 
 @Service
@@ -60,7 +58,17 @@ class PersonService(private val personRepository: PersonRepository) {
 
     }
 
-    fun getPeopleByUsername(username: String): Person = personRepository.findByUsername(username)
+    fun getPeopleByID(personID: String): Person
+    {
+        var idLong: Long? = personID.toLongOrNull()
+
+        if(idLong == null)
+        {
+            throw WrongDataTypeException("ERROR: Invalid data type provided for ID")
+        }
+
+        return personRepository.getById(idLong)
+    }
 
     fun createPerson(person:Person): Person {
         //making sure strings are in all lowercase except the unique username
@@ -116,7 +124,7 @@ class PersonService(private val personRepository: PersonRepository) {
         return if (personRepository.existsByUsername(personUsername)) {
             personRepository.save(
                 Person(
-                    id = getPeopleByUsername(personUsername).id,
+                    id = getPeopleByID(personUsername).id,
                     name = person.name.lowercase(),
                     surname = person.surname.lowercase(),
                     email = person.email,

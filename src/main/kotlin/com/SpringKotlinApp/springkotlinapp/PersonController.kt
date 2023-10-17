@@ -13,9 +13,9 @@ class PersonController(private val personService: PersonService) {
     @GetMapping("/people")
     fun getAllPeople(pageable: Pageable): Page<Person> = personService.getAllPeople(pageable)
 
-    @GetMapping("/people/{username}")
-    fun getPeopleByUsername(@PathVariable("username") username: String): Person =
-        personService.getPeopleByUsername(username)
+    @GetMapping("/people/{id}")
+    fun getPeopleByUsername(@PathVariable("id") personID: String): Person =
+        personService.getPeopleByID(personID)
 
     @PostMapping("/people")
     fun createPerson(@RequestBody payload: Person): Person = personService.createPerson(payload)
