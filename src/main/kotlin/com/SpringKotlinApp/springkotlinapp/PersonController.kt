@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class PersonController(private val personService: PersonService) {
 
-    //CRUD endpoints
+    //CRUD endpoints, only users with the admin role can access these.
     @GetMapping("/people")
     fun getAllPeople(pageable: Pageable): Page<Person> = personService.getAllPeople(pageable)
 
@@ -29,8 +29,12 @@ class PersonController(private val personService: PersonService) {
     fun deletePersonByUsername(@PathVariable("username") username: String): Unit =
         personService.deletePersonsByID(username)
 
-    //Extra endpoint that returns a list of users that can be filtered by name (also partial)
-    // and/or age (admin and guest can access). Username and password should not be returned on this endpoint.
+    /**
+     * Extra endpoint that returns a list of users that can be filtered by name (also partial) and/or age
+     * Both admin and guest users can access this endpoint
+     * DTO is used to hide away the username and password
+     * Request parameters are used so the end point is flexible
+     */
     @GetMapping("/users")
     fun getUsersNameAgeFilter(@RequestParam(required = false, name = "name") firstName: String?, @RequestParam(required = false, name = "age") age: String?): List<PersonDTO>{
         return personService.getAllPeopleByFirstnameAndAge(firstName,age)

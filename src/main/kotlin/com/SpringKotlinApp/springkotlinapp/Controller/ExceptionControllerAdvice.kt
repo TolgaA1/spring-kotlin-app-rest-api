@@ -11,6 +11,12 @@ import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
+/**
+ * This is a global handler for all the exceptions
+ * Allows the use of customised API error responses
+ * Makes use of the exception message template as seen in each handle method
+ */
+//
 
 @ControllerAdvice
 class ExceptionControllerAdvice {

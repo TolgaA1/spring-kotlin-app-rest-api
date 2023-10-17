@@ -2,9 +2,9 @@ package com.SpringKotlinApp.springkotlinapp
 
 import jakarta.persistence.*
 
+//This is defining the person entity.
 @Entity
 @Table(name = "person")
-//defining the person entity and it's properties
 data class Person(
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

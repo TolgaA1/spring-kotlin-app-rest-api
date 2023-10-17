@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController
 class SpringKotlinAppApplication{
 
 	@GetMapping
-	fun hi(): String {
-		return "hello"
+	fun home(): String {
+		return "home"
 	}
 }
 

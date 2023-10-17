@@ -69,7 +69,7 @@ class PersonService(private val personRepository: PersonRepository) {
 
     }
 
-
+    //Gets a person by searching for an ID
     fun getPeopleByID(personID: String): Person
     {
         val id = isAValidNumber(personID,"ERROR: Invalid data type provided for ID")
@@ -80,7 +80,8 @@ class PersonService(private val personRepository: PersonRepository) {
         else throw UsernameNotFoundException("ERROR: This person does not exist in the database.")
     }
 
-    fun createPerson(person:Person): Person {
+    fun createPerson(person:Person): Person
+    {
         //making sure strings are in all lowercase except the unique username
         return if(!personRepository.existsByUsername(person.username))
         {
@@ -100,8 +101,9 @@ class PersonService(private val personRepository: PersonRepository) {
         } else throw UsernameAlreadyExistsException("ERROR: This person already exists, please enter a new username.")
     }
 
-    fun updatePersonByID(personID: String, person: Person): Person? {
-
+    //this method creates a person that is found with the given ID
+    fun updatePersonByID(personID: String, person: Person): Person?
+    {
         val id = isAValidNumber(personID,"ERROR: Invalid data type provided for ID")
         if(personRepository.existsById(id))
         {
@@ -128,7 +130,8 @@ class PersonService(private val personRepository: PersonRepository) {
         } else throw UsernameNotFoundException("ERROR: No matching user was found.")
     }
 
-    fun deletePersonsByID(personID: String): Unit {
+    fun deletePersonsByID(personID: String)
+    {
         val id = isAValidNumber(personID,"ERROR: Invalid data type provided for ID")
         if (personRepository.existsById(id)) {
             personRepository.deleteById(id)
