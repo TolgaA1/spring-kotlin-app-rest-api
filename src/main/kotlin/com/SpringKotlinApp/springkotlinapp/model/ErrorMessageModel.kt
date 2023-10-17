@@ -1,4 +1,4 @@
-package com.SpringKotlinApp.springkotlinapp.Model
+package com.SpringKotlinApp.springkotlinapp.model
 
 /**
  * Template for error messages

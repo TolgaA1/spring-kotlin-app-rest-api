@@ -1,8 +1,11 @@
-package com.SpringKotlinApp.springkotlinapp
+package com.SpringKotlinApp.springkotlinapp.service
 
-import com.SpringKotlinApp.springkotlinapp.Exceptions.UsernameAlreadyExistsException
-import com.SpringKotlinApp.springkotlinapp.Exceptions.UsernameNotFoundException
-import com.SpringKotlinApp.springkotlinapp.Exceptions.WrongDataTypeException
+import com.SpringKotlinApp.springkotlinapp.exceptions.UsernameAlreadyExistsException
+import com.SpringKotlinApp.springkotlinapp.exceptions.UsernameNotFoundException
+import com.SpringKotlinApp.springkotlinapp.exceptions.WrongDataTypeException
+import com.SpringKotlinApp.springkotlinapp.Person
+import com.SpringKotlinApp.springkotlinapp.PersonDTO
+import com.SpringKotlinApp.springkotlinapp.repository.PersonRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -17,11 +20,13 @@ class PersonService(private val personRepository: PersonRepository) {
     {
         val personsDTO:List<PersonDTO> = personList.map{
                 person ->
-            PersonDTO(person.name,
-                person.surname,person.email,
+            PersonDTO(
+                person.name,
+                person.surname, person.email,
                 person.phone,
                 person.dateOfBirth,
-                person.age)
+                person.age
+            )
         }
         return personsDTO
     }
@@ -80,7 +85,7 @@ class PersonService(private val personRepository: PersonRepository) {
         else throw UsernameNotFoundException("ERROR: This person does not exist in the database.")
     }
 
-    fun createPerson(person:Person): Person
+    fun createPerson(person: Person): Person
     {
         //making sure strings are in all lowercase except the unique username
         return if(!personRepository.existsByUsername(person.username))

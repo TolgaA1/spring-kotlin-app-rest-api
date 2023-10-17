@@ -1,9 +1,9 @@
-package com.SpringKotlinApp.springkotlinapp.Controller
+package com.SpringKotlinApp.springkotlinapp.controller
 
-import com.SpringKotlinApp.springkotlinapp.Exceptions.UsernameAlreadyExistsException
-import com.SpringKotlinApp.springkotlinapp.Exceptions.UsernameNotFoundException
-import com.SpringKotlinApp.springkotlinapp.Exceptions.WrongDataTypeException
-import com.SpringKotlinApp.springkotlinapp.Model.ErrorMessageModel
+import com.SpringKotlinApp.springkotlinapp.exceptions.UsernameAlreadyExistsException
+import com.SpringKotlinApp.springkotlinapp.exceptions.UsernameNotFoundException
+import com.SpringKotlinApp.springkotlinapp.exceptions.WrongDataTypeException
+import com.SpringKotlinApp.springkotlinapp.model.ErrorMessageModel
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
