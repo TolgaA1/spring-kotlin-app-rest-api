@@ -1,4 +1,4 @@
-package com.SpringKotlinApp.springkotlinapp
+package com.SpringKotlinApp.springkotlinapp.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,7 +10,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
-
 
 @Configuration
 class SecurityConfiguration {
@@ -35,7 +34,7 @@ class SecurityConfiguration {
     //this method builds different types of users and roles. There will be a guest and an admin role.
     @Bean
     fun userDetails(): UserDetailsService {
-        val encoder:PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()
+        val encoder: PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()
         val guest = User.builder()
             .username("guest")
             .password(encoder.encode("guestpassword"))

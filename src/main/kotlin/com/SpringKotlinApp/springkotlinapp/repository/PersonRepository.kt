@@ -1,6 +1,6 @@
 package com.SpringKotlinApp.springkotlinapp.repository
 
-import com.SpringKotlinApp.springkotlinapp.Person
+import com.SpringKotlinApp.springkotlinapp.entity.Person
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

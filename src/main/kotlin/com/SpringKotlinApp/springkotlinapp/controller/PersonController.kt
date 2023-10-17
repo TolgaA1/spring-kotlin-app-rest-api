@@ -1,7 +1,7 @@
 package com.SpringKotlinApp.springkotlinapp.controller
 
-import com.SpringKotlinApp.springkotlinapp.Person
-import com.SpringKotlinApp.springkotlinapp.PersonDTO
+import com.SpringKotlinApp.springkotlinapp.entity.Person
+import com.SpringKotlinApp.springkotlinapp.dto.PersonDTO
 import com.SpringKotlinApp.springkotlinapp.service.PersonService
 import jakarta.transaction.Transactional
 import org.springframework.data.domain.Page

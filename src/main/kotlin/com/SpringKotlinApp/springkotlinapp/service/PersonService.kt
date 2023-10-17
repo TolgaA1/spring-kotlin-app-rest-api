@@ -3,8 +3,8 @@ package com.SpringKotlinApp.springkotlinapp.service
 import com.SpringKotlinApp.springkotlinapp.exceptions.UsernameAlreadyExistsException
 import com.SpringKotlinApp.springkotlinapp.exceptions.UsernameNotFoundException
 import com.SpringKotlinApp.springkotlinapp.exceptions.WrongDataTypeException
-import com.SpringKotlinApp.springkotlinapp.Person
-import com.SpringKotlinApp.springkotlinapp.PersonDTO
+import com.SpringKotlinApp.springkotlinapp.entity.Person
+import com.SpringKotlinApp.springkotlinapp.dto.PersonDTO
 import com.SpringKotlinApp.springkotlinapp.repository.PersonRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable

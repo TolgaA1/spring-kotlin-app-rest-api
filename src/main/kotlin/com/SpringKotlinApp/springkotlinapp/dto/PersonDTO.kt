@@ -1,7 +1,4 @@
-package com.SpringKotlinApp.springkotlinapp
-
-import jakarta.persistence.Column
-import jakarta.persistence.Id
+package com.SpringKotlinApp.springkotlinapp.dto
 
 //This is a Data Transfer Object that is used to hide the username and password from unauthorized users.
 class PersonDTO (

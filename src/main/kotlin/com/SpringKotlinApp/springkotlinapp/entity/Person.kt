@@ -1,4 +1,4 @@
-package com.SpringKotlinApp.springkotlinapp
+package com.SpringKotlinApp.springkotlinapp.entity
 
 import jakarta.persistence.*
 
@@ -34,4 +34,3 @@ data class Person(
     @Column(name = "password", nullable = false)
     val password: String
 )
-
