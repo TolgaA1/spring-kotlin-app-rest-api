@@ -7,10 +7,12 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
-
+//creating the service layer that provides all the business logic.
 @Service
 class PersonService(private val personRepository: PersonRepository) {
 
+    //this method is responsible for mapping the person class to the person DTO
+    //the DTO will hide the username and password data field
     fun mapPersonToPersonDTO(personList: List<Person>): List<PersonDTO>
     {
         val personsDTO:List<PersonDTO> = personList.map{
@@ -23,27 +25,36 @@ class PersonService(private val personRepository: PersonRepository) {
         }
         return personsDTO
     }
+
+    //this method checks whether the given string can be a number
+    fun isAValidNumber(personID:String?, exceptionMessage:String):Long
+    {
+        val idLong: Long? = personID?.toLongOrNull()
+
+        if(idLong == null)
+        {
+            throw WrongDataTypeException(exceptionMessage)
+        }
+        return idLong
+    }
+
+    //finds every person and takes in a pageable to allow for pagination
     fun getAllPeople(pageable: Pageable): Page<Person> = personRepository.findAll(pageable)
 
+    //returns a list of users that can be filtered by name and/or age
     fun getAllPeopleByFirstnameAndAge(personName:String?, age: String?):List<PersonDTO>
     {
-        var ageInt: Int? = age?.toIntOrNull()
-
-        if(age != null)
-        {
-            if(ageInt == null)
-            {
-                throw WrongDataTypeException("ERROR: Invalid data type provided for age.")
-            }
-        }
-
+        //checking if either personName or age are null, depending on which is null, execute the corresponding method
         if(personName != null && age != null)
         {
+            //checks if age can be an integer, if it can't, then a number has not been entered and throw an exception
+            val ageInt: Int = isAValidNumber(age,"ERROR: Invalid data type provided for age. Please enter a number.").toInt()
             val persons: List<Person> = personRepository.findAllByNameContainingAndAge(personName.lowercase(),ageInt)
             return mapPersonToPersonDTO(persons)
         }
         else if(personName == null && age != null)
         {
+            val ageInt: Int = isAValidNumber(age,"ERROR: Invalid data type provided for age. Please enter a number.").toInt()
             val persons: List<Person> = personRepository.findAllByAge(ageInt)
             return mapPersonToPersonDTO(persons)
         }
@@ -52,22 +63,21 @@ class PersonService(private val personRepository: PersonRepository) {
             val persons: List<Person> = personRepository.findAllByNameContaining(personName.lowercase())
             return mapPersonToPersonDTO(persons)
         }
-
+        //if age or name has not been specified, then just find all users
         val persons: List<Person> = personRepository.findAll()
         return mapPersonToPersonDTO(persons)
 
     }
 
+
     fun getPeopleByID(personID: String): Person
     {
-        var idLong: Long? = personID.toLongOrNull()
-
-        if(idLong == null)
+        val id = isAValidNumber(personID,"ERROR: Invalid data type provided for ID")
+        return if(personRepository.existsById(id))
         {
-            throw WrongDataTypeException("ERROR: Invalid data type provided for ID")
+            personRepository.getById(id)
         }
-
-        return personRepository.getById(idLong)
+        else throw UsernameNotFoundException("ERROR: This person does not exist in the database.")
     }
 
     fun createPerson(person:Person): Person {
@@ -91,57 +101,37 @@ class PersonService(private val personRepository: PersonRepository) {
     }
 
     fun updatePersonByID(personID: String, person: Person): Person? {
-        var idLong: Long? = personID.toLongOrNull()
 
-        if(idLong == null)
+        val id = isAValidNumber(personID,"ERROR: Invalid data type provided for ID")
+        if(personRepository.existsById(id))
         {
-            throw WrongDataTypeException("ERROR: Invalid data type provided for ID")
-        }
-
-        if(person.username != personRepository.getById(idLong).username && personRepository.existsByUsername(person.username))
-        {
-            throw UsernameAlreadyExistsException("ERROR: Another user with this username exists. Please choose a different username.")
-        }
-
-        return if (personRepository.existsById(idLong)) {
-            personRepository.save(
-                Person(
-                    id = idLong,
-                    name = person.name.lowercase(),
-                    surname = person.surname.lowercase(),
-                    email = person.email,
-                    phone = person.phone,
-                    dateOfBirth = person.dateOfBirth,
-                    age = person.age,
-                    username = person.username,
-                    password = person.password
+            if(person.username != personRepository.getById(id).username && personRepository.existsByUsername(person.username))
+            {
+                throw UsernameAlreadyExistsException("ERROR: Another user with this username exists. Please choose a different username.")
+            }
+            else
+            {
+                return personRepository.save(
+                    Person(
+                        id = id,
+                        name = person.name.lowercase(),
+                        surname = person.surname.lowercase(),
+                        email = person.email,
+                        phone = person.phone,
+                        dateOfBirth = person.dateOfBirth,
+                        age = person.age,
+                        username = person.username,
+                        password = person.password
+                    )
                 )
-            )
+            }
         } else throw UsernameNotFoundException("ERROR: No matching user was found.")
-
-    }
-    fun updatePersonByUsername(personUsername: String, person: Person): Person? {
-        return if (personRepository.existsByUsername(personUsername)) {
-            personRepository.save(
-                Person(
-                    id = getPeopleByID(personUsername).id,
-                    name = person.name.lowercase(),
-                    surname = person.surname.lowercase(),
-                    email = person.email,
-                    phone = person.phone,
-                    dateOfBirth = person.dateOfBirth,
-                    age = person.age,
-                    username = person.username,
-                    password = person.password
-                )
-            )
-        } else throw UsernameNotFoundException("ERROR: No matching user was found.")
-
     }
 
-    fun deletePersonsByUsername(username: String): Unit {
-        if (personRepository.existsByUsername(username)) {
-            personRepository.deleteByUsername(username)
+    fun deletePersonsByID(personID: String): Unit {
+        val id = isAValidNumber(personID,"ERROR: Invalid data type provided for ID")
+        if (personRepository.existsById(id)) {
+            personRepository.deleteById(id)
         } else throw UsernameNotFoundException("ERROR: No matching user was found.")
     }
 }

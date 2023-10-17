@@ -27,7 +27,7 @@ class PersonController(private val personService: PersonService) {
     @Transactional
     @DeleteMapping("/people/{username}")
     fun deletePersonByUsername(@PathVariable("username") username: String): Unit =
-        personService.deletePersonsByUsername(username)
+        personService.deletePersonsByID(username)
 
     //Extra endpoint that returns a list of users that can be filtered by name (also partial)
     // and/or age (admin and guest can access). Username and password should not be returned on this endpoint.
