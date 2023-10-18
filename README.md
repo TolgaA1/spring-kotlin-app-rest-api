@@ -13,5 +13,5 @@ The REST api was built using Spring Boot with Kotlin. This app supports:
 ## How to install
 1. Clone the project into your preferred IDE
 2. Build the project
-3. Run from main application
+3. Run from main application "SpringKotlinAppApplication"
 
