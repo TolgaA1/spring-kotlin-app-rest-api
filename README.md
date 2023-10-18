@@ -11,7 +11,7 @@ The REST api was built using Spring Boot with Kotlin. This app supports:
 * Comes with an optimised docker image of size 323MB
 
 
-##Endpoints
+## Endpoints
 This has app has been tested using Postman. Here are all the endpoints
 * /people GET Request
 * /people/{id} GET Request
