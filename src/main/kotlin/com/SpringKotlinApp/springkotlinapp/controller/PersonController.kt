@@ -17,7 +17,7 @@ class PersonController(private val personService: PersonService) {
     fun getAllPeople(pageable: Pageable): Page<Person> = personService.getAllPeople(pageable)
 
     @GetMapping("/people/{id}")
-    fun getPeopleByUsername(@PathVariable("id") personID: String): Person =
+    fun getPeopleByID(@PathVariable("id") personID: String): Person =
         personService.getPeopleByID(personID)
 
     @PostMapping("/people")
@@ -29,8 +29,8 @@ class PersonController(private val personService: PersonService) {
 
     @Transactional
     @DeleteMapping("/people/{username}")
-    fun deletePersonByUsername(@PathVariable("username") username: String): Unit =
-        personService.deletePersonsByID(username)
+    fun deletePersonByID(@PathVariable("username") id: String): Unit =
+        personService.deletePersonsByID(id)
 
     /**
      * Extra endpoint that returns a list of users that can be filtered by name (also partial) and/or age

@@ -31,10 +31,14 @@ class PersonService(private val personRepository: PersonRepository) {
         return personsDTO
     }
 
-    //this method checks whether the given string can be a number
-    fun isAValidNumber(personID:String?, exceptionMessage:String):Long
+    /**
+     * This method checks whether the given string can be a number
+     * @param exceptionMessage this is the exception message that will be outputted if the string can't be a number
+     * @param number this is the given number that will be checked
+     */
+    fun isAValidNumber(number:String?, exceptionMessage:String):Long
     {
-        val idLong: Long? = personID?.toLongOrNull()
+        val idLong: Long? = number?.toLongOrNull()
 
         if(idLong == null)
         {
@@ -106,7 +110,7 @@ class PersonService(private val personRepository: PersonRepository) {
         } else throw UsernameAlreadyExistsException("ERROR: This person already exists, please enter a new username.")
     }
 
-    //this method creates a person that is found with the given ID
+    //this method updates a person that is found with the given ID
     fun updatePersonByID(personID: String, person: Person): Person?
     {
         val id = isAValidNumber(personID,"ERROR: Invalid data type provided for ID")
