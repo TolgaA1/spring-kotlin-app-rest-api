@@ -28,8 +28,8 @@ class PersonController(private val personService: PersonService) {
         personService.updatePersonByID(id, payload)
 
     @Transactional
-    @DeleteMapping("/people/{username}")
-    fun deletePersonByID(@PathVariable("username") id: String): Unit =
+    @DeleteMapping("/people/{id}")
+    fun deletePersonByID(@PathVariable("id") id: String): Unit =
         personService.deletePersonsByID(id)
 
     /**
