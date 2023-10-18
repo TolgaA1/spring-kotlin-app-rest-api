@@ -10,6 +10,16 @@ The REST api was built using Spring Boot with Kotlin. This app supports:
 * Custom API error messages for readability
 * Comes with an optimised docker image of size 323MB
 
+
+##Endpoints
+This has app has been tested using Postman. Here are all the endpoints
+* /people GET Request
+* /people/{id} GET Request
+* /people POST Request
+* /people/{id} PUT Request
+* /people/{id} DELETE Request
+* /users GET Request allows for name and age parameters
+
 ## How to install
 1. Clone the project into your preferred IDE
 2. Build the project
